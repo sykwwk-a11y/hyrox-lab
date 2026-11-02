@@ -1,0 +1,54 @@
+---
+// src/components/Header.astro
+---
+<header class="max-w-4xl w-full mx-auto p-4 relative z-50">
+  <!-- カプセル状のヘッダー本体 -->
+  <div class="border border-zinc-800 rounded-full px-6 py-3.5 flex justify-between items-center bg-[#1E1E1E]/90 backdrop-blur-md relative">
+    
+    <!-- ロゴ部分 -->
+    <div>
+      <a href="/" class="block">
+        <h1 class="font-bold text-lg leading-none" style="color: #FFED00;">HYROX LAB</h1>
+        <p class="text-[11px] text-zinc-400 mt-0.5 font-serif tracking-wider">Musashikosugi</p>
+      </a>
+    </div>
+
+    <!-- ハンバーガーボタン（3本線アイコン） -->
+    <button 
+      id="menu-btn" 
+      type="button" 
+      class="space-y-1.5 cursor-pointer p-1 focus:outline-none"
+      aria-label="メニューを開く"
+    >
+      <div class="w-6 h-0.5 bg-white transition-all"></div>
+      <div class="w-6 h-0.5 bg-white transition-all"></div>
+      <div class="w-6 h-0.5 bg-white transition-all"></div>
+    </button>
+  </div>
+
+  <!-- ドロップダウンメニュー（初期状態は hidden） -->
+  <div 
+    id="menu-overlay" 
+    class="absolute top-full left-4 right-4 mt-2 bg-[#1E1E1E] border border-zinc-800 rounded-2xl shadow-2xl hidden p-6 z-50"
+  >
+    <nav class="flex flex-col space-y-4 text-sm font-medium">
+      <a href="#feature" class="text-zinc-300 hover:text-[#FFED00] transition px-2 py-1">Feature</a>
+      <a href="#facility" class="text-zinc-300 hover:text-[#FFED00] transition px-2 py-1">Facility</a>
+      <a href="/news/" class="text-zinc-300 hover:text-[#FFED00] transition px-2 py-1">お知らせ</a>
+      <a href="/booking" class="inline-block text-black font-bold py-3 px-4 rounded-full text-center mt-2" style="background-color: #FFED00;">
+        体験予約する
+      </a>
+    </nav>
+  </div>
+</header>
+
+<script>
+  const btn = document.getElementById('menu-btn');
+  const menu = document.getElementById('menu-overlay');
+
+  if (btn && menu) {
+    btn.addEventListener('click', () => {
+      menu.classList.toggle('hidden');
+    });
+  }
+</script>

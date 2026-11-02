@@ -1,0 +1,43 @@
+---
+// src/pages/thanks.astro
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout title="予約完了 | HYROX LAB 武蔵小杉">
+  <div class="max-w-xl mx-auto px-4 py-12 space-y-8">
+    <div>
+      <h2 class="text-4xl font-extrabold italic tracking-wider mb-2">
+        Thank you<br />for booking.
+      </h2>
+      <p class="text-lg font-bold text-zinc-300">予約申し込みが完了しました</p>
+    </div>
+
+    <div class="space-y-4 text-zinc-300 text-sm leading-relaxed">
+      <p>
+        お申し込み、誠にありがとうございます。ご入力いただいたメールアドレス宛に、自動送信にて確認メールをお送りしました。
+      </p>
+      <p>
+        24時間以内に、担当スタッフより確定日時および当日のご案内に関するご連絡を差し上げます。
+      </p>
+    </div>
+
+    <!-- 当日の持ち物案内 -->
+    <div class="bg-zinc-900 border border-zinc-800 p-6 rounded-lg space-y-3">
+      <h3 class="font-bold text-white text-base">体験当日の持ち物・ご案内</h3>
+      <ul class="space-y-1 text-sm text-zinc-300">
+        <li>- 運動しやすい服装（ウェア）</li>
+        <li>- 室内用トレーニングシューズ</li>
+        <li>- 拭き用タオル・水分補給用ドリンク</li>
+      </ul>
+      <p class="text-xs text-zinc-400 pt-2 border-t border-zinc-800">
+        ※着替え用のロッカールームおよびシャワー設備を完備しております。
+      </p>
+    </div>
+
+    <div class="text-center pt-4">
+      <a href="/" class="inline-block border border-zinc-500 rounded-full px-12 py-3 text-sm hover:bg-zinc-800 transition">
+        TOPへ戻る
+      </a>
+    </div>
+  </div>
+</Layout>

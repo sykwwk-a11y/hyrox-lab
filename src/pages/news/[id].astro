@@ -1,0 +1,35 @@
+---
+// src/pages/news/[id].astro
+import Layout from '../../layouts/Layout.astro';
+import { client, type News } from '../../lib/microcms';
+
+export async function getStaticPaths() {
+  const response = await client.get<{ contents: News[] }>({ endpoint: 'news' });
+  return response.contents.map((item: News) => ({
+    params: { id: item.id },
+    props: { item },
+  }));
+}
+
+const { item } = Astro.props;
+---
+
+<Layout title={`${item.title} | HYROX LAB 武蔵小杉`}>
+  <div class="max-w-xl mx-auto px-4 py-12 space-y-8">
+    <div>
+      <h2 class="text-2xl font-bold mb-2">{item.title}</h2>
+      <p class="text-sm text-zinc-400">
+        {new Date(item.publishedAt).toLocaleDateString('ja-JP', { year: 'numeric', month: '2-digit', day: '2-digit' }).replaceAll('/', '.')}
+      </p>
+    </div>
+
+    <!-- microCMS本文 -->
+    <div class="text-sm text-zinc-300 leading-relaxed space-y-4 border-t border-b border-zinc-800 py-6" set:html={item.content} />
+
+    <div class="text-center pt-4">
+      <a href="/news" class="inline-block border border-zinc-500 rounded-full px-12 py-3 text-sm hover:bg-zinc-800 transition">
+        お知らせ一覧へ戻る
+      </a>
+    </div>
+  </div>
+</Layout>

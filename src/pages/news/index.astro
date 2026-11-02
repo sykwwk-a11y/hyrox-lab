@@ -1,0 +1,190 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { client, type News } from '../../lib/microcms';
+
+let allNews: News[] = [];
+try {
+  const response = await client.get<{ contents: News[] }>({
+    endpoint: 'news',
+    queries: { limit: 100 },
+  });
+  allNews = response.contents || [];
+} catch (error) {
+  console.error('microCMS取得エラー:', error);
+}
+
+// 年とカテゴリの抽出
+const years = Array.from(
+  new Set(allNews.map((item) => new Date(item.publishedAt).getFullYear().toString()))
+).sort((a, b) => Number(b) - Number(a));
+
+const categories = Array.from(
+  new Set(allNews.map((item) => item.category).filter(Boolean))
+) as string[];
+---
+
+<Layout title="お知らせ一覧 | HYROX LAB 武蔵小杉">
+  <main class="max-w-3xl mx-auto px-4 py-12 space-y-8">
+    <div class="border-b border-zinc-800 pb-4">
+      <h1 class="text-3xl font-bold tracking-tight">お知らせ一覧</h1>
+      <p class="text-xs text-zinc-400 mt-1">HYROX LAB 武蔵小杉の最新情報です。</p>
+    </div>
+
+    <!-- 絞り込みフィルター -->
+    <div class="bg-zinc-900/60 p-4 rounded-xl border border-zinc-800 space-y-3">
+      <!-- 年フィルター -->
+      <div class="flex flex-wrap items-center gap-2">
+        <span class="text-xs font-bold text-zinc-400 w-16">年:</span>
+        <button
+          type="button"
+          data-year="all"
+          class="filter-year px-3 py-1 text-xs rounded-full border border-yellow-400 bg-yellow-400 text-black font-bold transition"
+        >
+          すべて
+        </button>
+        {years.map((year) => (
+          <button
+            type="button"
+            data-year={year}
+            class="filter-year px-3 py-1 text-xs rounded-full border border-zinc-700 text-zinc-300 hover:border-zinc-500 transition"
+          >
+            {year}年
+          </button>
+        ))}
+      </div>
+
+      <!-- カテゴリフィルター -->
+      {categories.length > 0 && (
+        <div class="flex flex-wrap items-center gap-2 pt-2 border-t border-zinc-800/80">
+          <span class="text-xs font-bold text-zinc-400 w-16">カテゴリ:</span>
+          <button
+            type="button"
+            data-category="all"
+            class="filter-cat px-3 py-1 text-xs rounded-full border border-yellow-400 bg-yellow-400 text-black font-bold transition"
+          >
+            すべて
+          </button>
+          {categories.map((cat) => (
+            <button
+              type="button"
+              data-category={cat}
+              class="filter-cat px-3 py-1 text-xs rounded-full border border-zinc-700 text-zinc-300 hover:border-zinc-500 transition"
+            >
+              {cat}
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
+
+    <!-- 記事リスト -->
+    {allNews.length > 0 ? (
+      <div class="divide-y divide-zinc-800 border-t border-b border-zinc-800">
+        {allNews.map((item) => {
+          const itemYear = new Date(item.publishedAt).getFullYear().toString();
+          return (
+            <a
+              href={`/news/${item.id}`}
+              data-news-item
+              data-year={itemYear}
+              data-category={item.category || ''}
+              class="block py-4 hover:text-yellow-400 transition flex flex-col sm:flex-row sm:items-baseline justify-between gap-2 group"
+            >
+              <div class="flex items-baseline gap-4">
+                <span class="text-xs text-zinc-400 shrink-0 font-mono">
+                  {new Date(item.publishedAt)
+                    .toLocaleDateString('ja-JP', {
+                      year: 'numeric',
+                      month: '2-digit',
+                      day: '2-digit',
+                    })
+                    .replaceAll('/', '.')}
+                </span>
+                <span class="text-sm font-medium group-hover:text-yellow-400">{item.title}</span>
+              </div>
+              {item.category && (
+                <span class="text-[10px] bg-zinc-800 text-zinc-300 px-2 py-0.5 rounded shrink-0 self-start sm:self-auto">
+                  {item.category}
+                </span>
+              )}
+            </a>
+          );
+        })}
+      </div>
+    ) : (
+      <p class="text-sm text-zinc-500 py-12 text-center">現在お知らせはありません。</p>
+    )}
+
+    <p id="no-match" class="hidden text-sm text-zinc-500 py-12 text-center">
+      該当するお知らせは見つかりませんでした。
+    </p>
+
+    <div class="text-center pt-4">
+      <a
+        href="/"
+        class="inline-block border border-zinc-600 rounded-full px-8 py-2 text-sm hover:bg-zinc-800 transition"
+      >
+        TOPへ戻る
+      </a>
+    </div>
+  </main>
+</Layout>
+
+<script>
+  let activeYear = 'all';
+  let activeCat = 'all';
+
+  const yearButtons = document.querySelectorAll<HTMLButtonElement>('.filter-year');
+  const catButtons = document.querySelectorAll<HTMLButtonElement>('.filter-cat');
+  const newsItems = document.querySelectorAll<HTMLElement>('[data-news-item]');
+  const noMatchEl = document.getElementById('no-match');
+
+  function applyFilter() {
+    let visibleCount = 0;
+
+    newsItems.forEach((item) => {
+      const y = item.getAttribute('data-year');
+      const c = item.getAttribute('data-category');
+
+      const matchY = activeYear === 'all' || y === activeYear;
+      const matchC = activeCat === 'all' || c === activeCat;
+
+      if (matchY && matchC) {
+        item.style.display = 'flex';
+        visibleCount++;
+      } else {
+        item.style.display = 'none';
+      }
+    });
+
+    if (noMatchEl) {
+      if (visibleCount === 0) {
+        noMatchEl.classList.remove('hidden');
+      } else {
+        noMatchEl.classList.add('hidden');
+      }
+    }
+  }
+
+  yearButtons.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      activeYear = btn.getAttribute('data-year') || 'all';
+      yearButtons.forEach((b) => {
+        b.className = 'filter-year px-3 py-1 text-xs rounded-full border border-zinc-700 text-zinc-300 hover:border-zinc-500 transition';
+      });
+      btn.className = 'filter-year px-3 py-1 text-xs rounded-full border border-yellow-400 bg-yellow-400 text-black font-bold transition';
+      applyFilter();
+    });
+  });
+
+  catButtons.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      activeCat = btn.getAttribute('data-category') || 'all';
+      catButtons.forEach((b) => {
+        b.className = 'filter-cat px-3 py-1 text-xs rounded-full border border-zinc-700 text-zinc-300 hover:border-zinc-500 transition';
+      });
+      btn.className = 'filter-cat px-3 py-1 text-xs rounded-full border border-yellow-400 bg-yellow-400 text-black font-bold transition';
+      applyFilter();
+    });
+  });
+</script>

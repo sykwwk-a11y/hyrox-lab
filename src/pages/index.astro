@@ -1,0 +1,259 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { client, type News } from '../lib/microcms';
+
+// microCMSからお知らせを最新3件取得
+let newsList: News[] = [];
+try { 
+  const response = await client.get<{ contents: News[] }>({
+    endpoint: 'news',
+    queries: { limit: 3 },
+  });
+  newsList = response.contents || [];
+} catch (error) {
+  console.error('microCMS取得エラー:', error);
+}
+---
+    
+<Layout title="HYROX LAB 武蔵小杉">
+  <main class="w-full">
+  <!-- ヒーローセクション（ヘッダーは含まない純粋なコンテンツ） -->
+  <section class="relative px-4 pt-4 pb-16 max-w-4xl mx-auto">
+    <div class="relative rounded-3xl overflow-hidden border border-zinc-800 p-8 md:p-16 flex flex-col justify-end min-h-[500px]">
+      <!-- 背景画像とオーバーレイ -->
+      <div class="absolute inset-0 z-0">
+        <img
+          src="/images/hero-bg.jpg"
+          alt="HYROX LAB Training"
+          class="w-full h-full object-cover object-center opacity-40 grayscale"
+        />
+        <div class="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent"></div>
+      </div>
+
+      <!-- テキスト＆ボタンコンテンツ -->
+      <div class="relative z-10 space-y-6">
+        <p class="text-xs font-medium tracking-wide flex items-center gap-2" style="color: #FFED00;">
+          <span class="inline-block w-4 h-[1px]" style="background-color: #FFED00;"></span>
+          Welcome to HYROX LAB
+        </p>
+
+        <h2 class="text-4xl sm:text-6xl font-black leading-[0.95] tracking-tight font-serif text-white">
+          Break<br />
+          Your<br />
+          <span style="color: #FFED00;">Limit.</span>
+        </h2>
+
+        <p class="text-zinc-300 text-xs sm:text-sm leading-relaxed max-w-lg">
+          限界の壁を打ち破るのは、他の誰でもない。<br />
+          あなたのその一歩だ。<br />
+          HYROX LAB 武蔵小杉で最強の自分と出会おう。
+        </p>
+
+        <div class="pt-2">
+          <a href="#booking"
+            class="inline-flex items-center justify-between font-bold rounded-full px-8 py-3.5 w-full sm:max-w-xs transition duration-200"
+            style="background-color: #FFED00; color: #000000;"
+          >
+            <span class="text-sm tracking-wider">体験予約する</span>
+            <div class="w-6 h-6 rounded-full border border-black/80 flex items-center justify-center ml-2">
+              <svg class="w-3.5 h-3.5 stroke-[2.5]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+              </svg>
+            </div>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+    <div class="max-w-4xl mx-auto px-4 py-16 space-y-24">
+
+      <!-- 2. 特徴セクション (Feature) -->
+      <section id="feature" class="space-y-8">
+        <div class="text-center space-y-2">
+          <h2 class="text-2xl md:text-3xl font-bold tracking-tight">Feature</h2>
+          <p class="text-zinc-400 text-xs md:text-sm">HYROX LAB 武蔵小杉が選ばれる理由</p>
+        </div>
+        <div class="grid md:grid-cols-3 gap-6">
+          <div class="bg-zinc-900/80 border border-zinc-800 p-6 rounded-2xl space-y-4">
+            <h3 class="text-lg font-bold text-yellow-400">01. 専門特化プログラム</h3>
+            <p class="text-zinc-400 text-xs leading-relaxed">世界中で大人気のフィットレース「HYROX」に特化した専用の機材とカリキュラムを完備。</p>
+          </div>
+          <div class="bg-zinc-900/80 border border-zinc-800 p-6 rounded-2xl space-y-4">
+            <h3 class="text-lg font-bold text-yellow-400">02. 徹底した少人数指導</h3>
+            <p class="text-zinc-400 text-xs leading-relaxed">経験豊富なトレーナーが一人ひとりのフォームや目標に合わせてきめ細かくサポート。</p>
+          </div>
+          <div class="bg-zinc-900/80 border border-zinc-800 p-6 rounded-2xl space-y-4">
+            <h3 class="text-lg font-bold text-yellow-400">03. 充実の設備環境</h3>
+            <p class="text-zinc-400 text-xs leading-relaxed">Sled PushやRowなど、公式レースに対応したハイスペックなトレーニングエリア。</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- 3. 施設紹介 (Facility) -->
+      <section id="facility" class="space-y-8">
+        <div class="text-center space-y-2">
+          <h2 class="text-2xl md:text-3xl font-bold tracking-tight">Facility</h2>
+          <p class="text-zinc-400 text-xs md:text-sm">トレーニング環境のご案内</p>
+        </div>
+        <div class="bg-zinc-900/80 border border-zinc-800 p-6 md:p-8 rounded-2xl space-y-6">
+          <p class="text-zinc-300 text-xs md:text-sm leading-relaxed">
+            清潔感あふれる空間に、シャワールームやロッカールームを完備。仕事帰りやトレーニング後も快適にお過ごしいただけます。
+          </p>
+        </div>
+      </section>
+
+      <!-- 4. ご利用の流れ (Flow) -->
+      <section id="flow" class="space-y-8">
+        <div class="text-center space-y-2">
+          <h2 class="text-2xl md:text-3xl font-bold tracking-tight">Flow</h2>
+          <p class="text-zinc-400 text-xs md:text-sm">体験トレーニングまでの流れ</p>
+        </div>
+        <div class="space-y-4">
+          <div class="bg-zinc-900/80 border border-zinc-800 p-6 rounded-2xl flex flex-col md:flex-row md:items-center gap-4">
+            <span class="text-yellow-400 font-mono font-bold text-xl">STEP 01</span>
+            <div>
+              <h3 class="font-bold text-sm">WEBからご予約</h3>
+              <p class="text-zinc-400 text-xs mt-1">体験予約ページよりご希望の日時を選択して簡単にお申し込みいただけます。</p>
+            </div>
+          </div>
+          <div class="bg-zinc-900/80 border border-zinc-800 p-6 rounded-2xl flex flex-col md:flex-row md:items-center gap-4">
+            <span class="text-yellow-400 font-mono font-bold text-xl">STEP 02</span>
+            <div>
+              <h3 class="font-bold text-sm">ご来店・カウンセリング</h3>
+              <p class="text-zinc-400 text-xs mt-1">当日は運動しやすい服装と室内シューズをお持ちになりお越しください。</p>
+            </div>
+          </div>
+          <div class="bg-zinc-900/80 border border-zinc-800 p-6 rounded-2xl flex flex-col md:flex-row md:items-center gap-4">
+            <span class="text-yellow-400 font-mono font-bold text-xl">STEP 03</span>
+            <div>
+              <h3 class="font-bold text-sm">トレーニング体験</h3>
+              <p class="text-zinc-400 text-xs mt-1">実際のクラスを体験し、ジムの雰囲気や効果を実感していただけます。</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 5. お客様の声 (Voice) -->
+<section id="voice" class="space-y-8">
+  <div class="text-center space-y-2">
+    <h2 class="text-2xl md:text-3xl font-bold tracking-tight">Voice</h2>
+    <p class="text-zinc-400 text-xs md:text-sm">会員様からの喜びの声</p>
+  </div>
+  <div class="grid md:grid-cols-2 gap-6">
+    <div class="bg-zinc-900/80 border border-zinc-800 p-6 rounded-2xl space-y-3">
+      <p class="text-xs" style="color: #FFED00;">会社員・30代男性</p>
+      <p class="text-zinc-300 text-xs leading-relaxed">「初めてのHYROXでしたが、トレーナーの的確な指導のおかげで楽しくレベルアップできています！」</p>
+    </div>
+    <div class="bg-zinc-900/80 border border-zinc-800 p-6 rounded-2xl space-y-3">
+      <p class="text-xs" style="color: #FFED00;">主婦・20代女性</p>
+      <p class="text-zinc-300 text-xs leading-relaxed">「施設がとても綺麗で、シャワー完備なのも嬉しいポイント。毎回達成感があります。」</p>
+    </div>
+  </div>
+</section>
+
+      <!-- 6. よくある質問 (FQA) -->
+
+
+      <!-- 7. お知らせセクション (News) - microCMS連携 -->
+      <section class="bg-zinc-900/80 border border-zinc-800 p-6 md:p-8 rounded-2xl space-y-6">
+        <div class="text-center space-y-2">
+          <h3 class="text-2xl font-bold tracking-tight">お知らせ</h3>
+          <p class="text-zinc-400 text-xs md:text-sm">最新情報や営業時間変更などのお知らせはこちらからご確認いただけます。</p>
+        </div>
+
+        {newsList.length > 0 ? (
+          <div class="divide-y divide-zinc-800 border-t border-b border-zinc-800">
+            {newsList.map((item) => (
+              <a
+                href={`/news/${item.id}`}
+                class="py-4 hover:text-yellow-400 transition flex flex-col sm:flex-row sm:items-baseline gap-2 sm:gap-6 group"
+              >
+                <span class="text-xs text-zinc-400 shrink-0 font-mono">
+                  {new Date(item.publishedAt)
+                    .toLocaleDateString('ja-JP', {
+                      year: 'numeric',
+                      month: '2-digit',
+                      day: '2-digit',
+                    })
+                    .replaceAll('/', '.')}
+                </span>
+                <span class="text-sm font-medium group-hover:text-yellow-400 transition">
+                  {item.title}
+                </span>
+              </a>
+            ))}
+          </div>
+        ) : (
+          <p class="text-xs text-center text-zinc-500 py-6">現在お知らせはありません。</p>
+        )}
+
+        <div class="text-center pt-2">
+          <a
+            href="/news"
+            class="inline-block border border-zinc-600 rounded-full px-8 py-2.5 text-xs tracking-wider hover:bg-zinc-800 transition"
+          >
+            お知らせ一覧を見る
+          </a>
+        </div>
+      </section>
+      <!-- Locationセクション -->
+    <!-- Locationセクション -->
+    <section id="location" class="px-4 py-16 max-w-4xl mx-auto">
+      <div class="space-y-8">
+        <!-- 見出し -->
+        <div class="flex items-center gap-3">
+          <div class="w-1 h-6" style="background-color: #FFED00;"></div>
+          <h2 class="text-2xl sm:text-3xl font-serif font-bold text-white tracking-wide">Location</h2>
+        </div>
+
+        <!-- 店舗詳細情報 -->
+        <div class="text-zinc-300 text-sm sm:text-base space-y-2">
+          <p><strong class="text-white">Gym Name:</strong> HYROX LAB 武蔵小杉</p>
+          <p><strong class="text-white">Address:</strong> 〒211-0063 神奈川県川崎市中原区小杉町1-2-3</p>
+          <p><strong class="text-white">Access:</strong> 武蔵小杉駅より徒歩約5分</p>
+          <p><strong class="text-white">Hours:</strong> 平日 07:00 - 22:00 / 土日祝 08:00 - 20:00</p>
+          <p><strong class="text-white">Closed:</strong> 不定期（Instagramをご確認ください。）</p>
+        </div>
+
+        <!-- マップ埋め込みエリア -->
+        <div class="w-full h-64 sm:h-80 rounded-3xl overflow-hidden border border-zinc-800">
+          <iframe 
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3245.071061144534!2d139.65689107607685!3d35.57663783571215!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x6018f57adf66e637%3A0x67cedb0d3b150b7e!2z5q2m6JS15bCP5p2J6aeF!5e0!3m2!1sja!2sjp!4v1793595454257!5m2!1sja!2sjp" 
+            class="w-full h-full border-0" 
+            allowfullscreen="" 
+            loading="lazy" 
+            referrerpolicy="strict-origin-when-cross-origin">
+          </iframe>
+        </div>
+      </div>
+    </section>
+    <!-- 体験予約・お問い合わせフォーム（Googleフォーム埋め込み） -->
+    <section id="booking" class="px-4 py-16 max-w-4xl mx-auto">
+      <div class="bg-zinc-900/80 border border-zinc-800 rounded-3xl p-6 sm:p-10 shadow-2xl space-y-6">
+        
+        <!-- 見出し -->
+        <div class="flex items-center gap-3">
+          <div class="w-1 h-6" style="background-color: #FFED00;"></div>
+          <h2 class="text-2xl sm:text-3xl font-serif font-bold text-white tracking-wide">体験予約</h2>
+        </div>
+
+        <!-- Googleフォーム埋め込みエリア -->
+        <div class="w-full overflow-hidden rounded-2xl bg-white/5 border border-zinc-800">
+          <iframe 
+            src="https://docs.google.com/forms/d/e/1FAIpQLSdm-5NcfI_gbX2yNTgL5oD78KbidNWTWL9UYs2-0nAoHS3FxA/viewform?embedded=true" 
+            class="w-full h-[750px] sm:h-[850px] border-0" 
+            loading="lazy">
+            読み込み中...
+          </iframe>
+        </div>
+<!-- プライバシーポリシーへの誘導テキストの例 -->
+<div class="text-center mt-4">
+  <p class="text-xs text-zinc-400">
+    ご入力いただいた情報は、<a href="/privacy" target="_blank" class="text-zinc-300 underline hover:text-white">プライバシーポリシー</a>をご確認の上、ご同意いただいてから送信してください。
+  </p>
+</div>
+      </div>
+    </section>
+    </div>
+</main>
+</Layout>
