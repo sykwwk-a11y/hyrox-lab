@@ -2,7 +2,7 @@ import { createClient } from 'microcms-js-sdk';
 
 export const client = createClient({
   serviceDomain: import.meta.env.PUBLIC_MICROCMS_SERVICE_DOMAIN || 'hyrox-lab-musashikosugi',
-  apiKey: import.meta.env.PUBLIC_MICROCMS_API_KEY || 'fpjNp8z3qTIpS2QGWqwms6Qj9yeqSo51uLTP',
+  apiKey: import.meta.env.PUBLIC_MICROCMS_API_KEY || '',
 });
 
 export type News = {
